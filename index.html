@@ -45,6 +45,18 @@
             position: relative;
         }
 
+        /* Animação de tremor para o botão de atenção */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
         @media (max-width: 480px) {
             body { padding: 0; }
             .screen { height: 100vh; max-height: 100vh; border-radius: 0; }
@@ -86,7 +98,7 @@
 
         /* CHAT SCREEN */
         .chat-header {
-            padding: 16px 20px;
+            padding: 12px 16px;
             background: #0f172a;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             display: flex;
@@ -94,8 +106,14 @@
             align-items: center;
         }
 
-        .user-status { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .user-status { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9rem; }
         .status-dot.online { width: 10px; height: 10px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
         .messages-container {
             flex: 1;
@@ -118,6 +136,7 @@
 
         .message.sent { align-self: flex-end; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border-bottom-right-radius: 4px; }
         .message.received { align-self: flex-start; background: #1e293b; color: #e2e8f0; border-bottom-left-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .message.system { align-self: center; background: rgba(255, 255, 255, 0.05); color: #94a3b8; font-size: 0.8rem; border-radius: 12px; padding: 6px 12px; }
         .message img { max-width: 100%; border-radius: 12px; margin-top: 4px; display: block; }
 
         .sticker-picker {
@@ -141,7 +160,7 @@
             background: #0f172a;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             border-top: 1px solid rgba(255, 255, 255, 0.06);
         }
 
@@ -155,7 +174,24 @@
             outline: none;
         }
 
-        .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #94a3b8; }
+        .icon-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #94a3b8; padding: 6px; border-radius: 50%; }
+        .icon-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+        
+        .btn-restart {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-restart:hover { background: #dc2626; }
+
         .btn-primary, .btn-secondary { padding: 12px 20px; border: none; border-radius: 24px; font-weight: 600; cursor: pointer; }
         .btn-primary { background: #2563eb; color: #fff; }
         .btn-secondary { background: #334155; color: #f1f5f9; width: 100%; }
@@ -179,9 +215,12 @@
         <header class="chat-header">
             <div class="user-status">
                 <span class="status-dot online"></span>
-                <span>Conversa Anônima P2P</span>
+                <span>Anônimo P2P</span>
             </div>
-            <small>Memória RAM (Sem Banco)</small>
+            <div class="header-actions">
+                <button id="nudge-btn" class="icon-btn" title="Chamar Atenção">🔔</button>
+                <button id="restart-btn" class="btn-restart" title="Encerrar e Voltar">🔄 Sair</button>
+            </div>
         </header>
 
         <main id="chat-messages" class="messages-container"></main>
@@ -207,6 +246,7 @@
     <script>
         let peer = null;
         let conn = null;
+        let isLeavingHandled = false;
 
         const setupScreen = document.getElementById('setup-screen');
         const chatScreen = document.getElementById('chat-screen');
@@ -219,11 +259,17 @@
         const imageInput = document.getElementById('image-input');
         const stickerBtn = document.getElementById('sticker-btn');
         const stickerPicker = document.getElementById('sticker-picker');
+        const nudgeBtn = document.getElementById('nudge-btn');
+        const restartBtn = document.getElementById('restart-btn');
 
         const targetPeerId = new URLSearchParams(window.location.search).get('sala');
 
+        // Pede permissão de Notificação no navegador
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+
         if (targetPeerId) {
-            // USUÁRIO B: Acessou pelo QR Code / Link
             statusLabel.innerText = "Conectando ao criador da sala...";
             peer = new Peer();
 
@@ -232,7 +278,6 @@
                 setupConnectionEvents();
             });
         } else {
-            // USUÁRIO A: Criador da Sala
             peer = new Peer();
 
             peer.on('open', (id) => {
@@ -264,15 +309,72 @@
             });
 
             conn.on('data', (data) => {
-                appendMessage(data.content, 'received', data.type);
+                if (data.type === 'nudge') {
+                    handleNudgeReceived();
+                } else if (data.type === 'disconnect') {
+                    handleRemoteDisconnect();
+                } else {
+                    appendMessage(data.content, 'received', data.type);
+                }
             });
 
             conn.on('close', () => {
-                alert('A outra pessoa desconectou da sala.');
-                window.location.href = window.location.pathname;
+                handleRemoteDisconnect();
             });
         }
 
+        // --- CHAMAR ATENÇÃO (NUDGE) ---
+        nudgeBtn.addEventListener('click', () => {
+            if (!conn) return;
+            conn.send({ type: 'nudge' });
+            appendMessage('Você chamou a atenção da outra pessoa!', 'system');
+        });
+
+        function handleNudgeReceived() {
+            // 1. Vibração no celular
+            if ("vibrate" in navigator) {
+                navigator.vibrate([200, 100, 200, 100, 400]);
+            }
+
+            // 2. Efeito de tremor na tela
+            chatScreen.classList.add('shake');
+            setTimeout(() => chatScreen.classList.remove('shake'), 500);
+
+            // 3. Som de alerta
+            playAlertSound();
+
+            // 4. Notificação e alerta de título para PC
+            appendMessage('⚠️ A outra pessoa chamou sua atenção!', 'system');
+            
+            if (document.hidden) {
+                document.title = "⚠️ CHAMANDO ATENÇÃO!";
+                if ("Notification" in window && Notification.permission === "granted") {
+                    new Notification("Chat Anônimo", {
+                        body: "A outra pessoa chamou sua atenção!",
+                        icon: "https://fav.farm/🔔"
+                    });
+                }
+            }
+        }
+
+        window.addEventListener('focus', () => {
+            document.title = "Chat Anônimo P2P";
+        });
+
+        function playAlertSound() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, ctx.currentTime); // Nota Lá
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        }
+
+        // --- ENVIAR MENSAGENS E IMAGENS ---
         function sendMessage() {
             const text = messageInput.value.trim();
             if (!text || !conn) return;
@@ -298,6 +400,37 @@
             reader.readAsDataURL(file);
         });
 
+        // --- REINICIAR E DESCONEXÃO AUTOMÁTICA ---
+        function resetToHome() {
+            isLeavingHandled = true;
+            if (conn) {
+                conn.send({ type: 'disconnect' });
+                conn.close();
+            }
+            window.location.href = window.location.pathname;
+        }
+
+        restartBtn.addEventListener('click', () => {
+            if (confirm('Deseja realmente sair e reiniciar a sala?')) {
+                resetToHome();
+            }
+        });
+
+        function handleRemoteDisconnect() {
+            if (isLeavingHandled) return;
+            isLeavingHandled = true;
+            alert('A outra pessoa fechou o chat ou desconectou. Você será redirecionado para a tela inicial.');
+            window.location.href = window.location.pathname;
+        }
+
+        // Dispara ao fechar a aba ou recarregar
+        window.addEventListener('beforeunload', () => {
+            if (conn && !isLeavingHandled) {
+                conn.send({ type: 'disconnect' });
+            }
+        });
+
+        // Emojis
         stickerBtn.addEventListener('click', () => stickerPicker.classList.toggle('hidden'));
         document.querySelectorAll('.sticker').forEach(s => {
             s.addEventListener('click', () => {
