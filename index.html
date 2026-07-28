@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Anônimo P2P</title>
+    
+    <!-- Bibliotecas externas via CDN (QR Code e PeerJS) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .hidden { display: none !important; }
+
+        .screen {
+            width: 100%;
+            max-width: 440px;
+            height: 85vh;
+            max-height: 750px;
+            background: #1e293b;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 0; }
+            .screen { height: 100vh; max-height: 100vh; border-radius: 0; }
+        }
+
+        /* SETUP SCREEN */
+        #setup-screen {
+            justify-content: center;
+            align-items: center;
+            padding: 32px 24px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            text-align: center;
+        }
+
+        .card h2 { font-size: 1.5rem; color: #fff; margin-bottom: 8px; }
+        .card p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 24px; }
+
+        #qrcode-container {
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 20px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: center;
+            width: fit-content;
+            border: 4px solid #334155;
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* CHAT SCREEN */
+        .chat-header {
+            padding: 16px 20px;
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-status { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .status-dot.online { width: 10px; height: 10px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #141e2e;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .message.sent { align-self: flex-end; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border-bottom-right-radius: 4px; }
+        .message.received { align-self: flex-start; background: #1e293b; color: #e2e8f0; border-bottom-left-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .message img { max-width: 100%; border-radius: 12px; margin-top: 4px; display: block; }
+
+        .sticker-picker {
+            background: #0f172a;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            text-align: center;
+            font-size: 1.6rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            max-height: 140px;
+            overflow-y: auto;
+        }
+
+        .sticker { cursor: pointer; padding: 6px; border-radius: 8px; }
+        .sticker:hover { background: rgba(255, 255, 255, 0.08); }
+
+        .chat-footer {
+            padding: 14px 16px;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .chat-footer input[type="text"] {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 24px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #fff;
+            outline: none;
+        }
+
+        .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #94a3b8; }
+        .btn-primary, .btn-secondary { padding: 12px 20px; border: none; border-radius: 24px; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-secondary { background: #334155; color: #f1f5f9; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <!-- TELA 1: SETUP E QR CODE -->
+    <div id="setup-screen" class="screen">
+        <div class="card">
+            <h2>💬 Chat Anônimo Secreto</h2>
+            <p>Escaneie o QR Code abaixo com outro celular para iniciar a conversa a dois.</p>
+            <div id="qrcode-container"></div>
+            <p class="status-text" id="status-label">Conectando ao serviço P2P...</p>
+            <button id="copy-btn" class="btn-secondary">Copiar Link da Sala</button>
+        </div>
+    </div>
+
+    <!-- TELA 2: INTERFACE DE CHAT -->
+    <div id="chat-screen" class="screen hidden">
+        <header class="chat-header">
+            <div class="user-status">
+                <span class="status-dot online"></span>
+                <span>Conversa Anônima P2P</span>
+            </div>
+            <small>Memória RAM (Sem Banco)</small>
+        </header>
+
+        <main id="chat-messages" class="messages-container"></main>
+
+        <div id="sticker-picker" class="sticker-picker hidden">
+            <span class="sticker">😀</span><span class="sticker">😂</span><span class="sticker">😍</span>
+            <span class="sticker">😎</span><span class="sticker">🔥</span><span class="sticker">👍</span>
+            <span class="sticker">🎉</span><span class="sticker">❤️</span><span class="sticker">👻</span>
+            <span class="sticker">🚀</span><span class="sticker">🍕</span><span class="sticker">🙈</span>
+        </div>
+
+        <footer class="chat-footer">
+            <button id="sticker-btn" class="icon-btn">😃</button>
+            <label for="image-input" class="icon-btn">
+                📷
+                <input type="file" id="image-input" accept="image/*" hidden>
+            </label>
+            <input type="text" id="message-input" placeholder="Digite uma mensagem..." autocomplete="off">
+            <button id="send-btn" class="btn-primary">Enviar</button>
+        </footer>
+    </div>
+
+    <script>
+        let peer = null;
+        let conn = null;
+
+        const setupScreen = document.getElementById('setup-screen');
+        const chatScreen = document.getElementById('chat-screen');
+        const qrcodeContainer = document.getElementById('qrcode-container');
+        const statusLabel = document.getElementById('status-label');
+        const copyBtn = document.getElementById('copy-btn');
+        const messagesContainer = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const imageInput = document.getElementById('image-input');
+        const stickerBtn = document.getElementById('sticker-btn');
+        const stickerPicker = document.getElementById('sticker-picker');
+
+        const targetPeerId = new URLSearchParams(window.location.search).get('sala');
+
+        if (targetPeerId) {
+            // USUÁRIO B: Acessou pelo QR Code / Link
+            statusLabel.innerText = "Conectando ao criador da sala...";
+            peer = new Peer();
+
+            peer.on('open', () => {
+                conn = peer.connect(targetPeerId);
+                setupConnectionEvents();
+            });
+        } else {
+            // USUÁRIO A: Criador da Sala
+            peer = new Peer();
+
+            peer.on('open', (id) => {
+                statusLabel.innerText = "Aguardando a 2ª pessoa escanear...";
+                const roomUrl = `${window.location.origin}${window.location.pathname}?sala=${id}`;
+
+                new QRCode(qrcodeContainer, {
+                    text: roomUrl,
+                    width: 180,
+                    height: 180
+                });
+
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(roomUrl);
+                    alert('Link da sala copiado!');
+                };
+            });
+
+            peer.on('connection', (c) => {
+                conn = c;
+                setupConnectionEvents();
+            });
+        }
+
+        function setupConnectionEvents() {
+            conn.on('open', () => {
+                setupScreen.classList.add('hidden');
+                chatScreen.classList.remove('hidden');
+            });
+
+            conn.on('data', (data) => {
+                appendMessage(data.content, 'received', data.type);
+            });
+
+            conn.on('close', () => {
+                alert('A outra pessoa desconectou da sala.');
+                window.location.href = window.location.pathname;
+            });
+        }
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !conn) return;
+
+            conn.send({ type: 'text', content: text });
+            appendMessage(text, 'sent', 'text');
+            messageInput.value = '';
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || !conn) return;
+
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const base64Image = evt.target.result;
+                conn.send({ type: 'image', content: base64Image });
+                appendMessage(base64Image, 'sent', 'image');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        stickerBtn.addEventListener('click', () => stickerPicker.classList.toggle('hidden'));
+        document.querySelectorAll('.sticker').forEach(s => {
+            s.addEventListener('click', () => {
+                messageInput.value += s.innerText;
+                stickerPicker.classList.add('hidden');
+                messageInput.focus();
+            });
+        });
+
+        function appendMessage(content, side, type = 'text') {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', side);
+
+            if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = content;
+                msgDiv.appendChild(img);
+            } else {
+                msgDiv.innerText = content;
+            }
+
+            messagesContainer.appendChild(msgDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
