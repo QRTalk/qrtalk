@@ -349,7 +349,7 @@
             if (document.hidden) {
                 document.title = "⚠️ CHAMANDO ATENÇÃO!";
                 if ("Notification" in window && Notification.permission === "granted") {
-                    new Notification("Chat Anônimo", {
+                    new Notification("Chat", {
                         body: "A outra pessoa chamou sua atenção!",
                         icon: "https://fav.farm/🔔"
                     });
@@ -358,7 +358,7 @@
         }
 
         window.addEventListener('focus', () => {
-            document.title = "Chat Anônimo P2P";
+            document.title = "Chat P2P";
         });
 
         function playAlertSound() {
