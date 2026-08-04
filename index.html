@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
     <meta
         name="viewport"
@@ -15,336 +14,272 @@
     <meta name="description" content="Chat P2P totalmente anônimo">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Bibliotecas -->
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-
 </head>
 
 <body>
 
-<!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- TELA INICIAL -->
+    <!-- ========================================================= -->
 
-<!-- TELA INICIAL -->
+    <section id="setup-screen" class="screen">
+        <div class="card">
+            <h1 class="logo">💬 QRTalk</h1>
 
-<!-- ========================================================= -->
+            <p class="subtitle">
+                Chat privado P2P totalmente anônimo
+            </p>
 
-<section id="setup-screen" class="screen">
+            <div id="qrcode-container"></div>
 
-    <div class="card">
+            <div id="status-label" class="status-text">
+                Conectando...
+            </div>
 
-        <h1 class="logo">
-            💬 QRTalk
-        </h1>
+            <button id="copy-btn" class="btn-secondary" type="button">
+                Copiar Link da Sala
+            </button>
+        </div>
+    </section>
 
-        <p class="subtitle">
-            Chat privado P2P totalmente anônimo
-        </p>
+    <!-- ========================================================= -->
+    <!-- CHAT -->
+    <!-- ========================================================= -->
 
-        <div id="qrcode-container"></div>
+    <section id="chat-screen" class="screen hidden">
 
-        <div id="status-label" class="status-text">
-            Conectando...
+        <header class="chat-header">
+            <div class="header-left">
+                <div id="status-dot" class="status-dot offline"></div>
+
+                <div>
+                    <div class="chat-title">Anônimo</div>
+
+                    <div id="chat-status" class="chat-status">
+                        Aguardando conexão...
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <button
+                    id="theme-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Tema"
+                    aria-label="Alternar tema"
+                >
+                    🌙
+                </button>
+
+                <button
+                    id="nudge-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Chamar atenção"
+                    aria-label="Chamar atenção"
+                >
+                    🔔
+                </button>
+
+                <button
+                    id="restart-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Encerrar conversa"
+                    aria-label="Encerrar conversa"
+                >
+                    🚪
+                </button>
+            </div>
+        </header>
+
+        <!-- ========================================================= -->
+        <!-- ÁREA DAS MENSAGENS -->
+        <!-- ========================================================= -->
+
+        <main id="chat-messages"></main>
+
+        <!-- ========================================================= -->
+        <!-- DIGITANDO -->
+        <!-- ========================================================= -->
+
+        <div id="typing-indicator" class="typing hidden">
+            A outra pessoa está digitando...
         </div>
 
-        <button id="copy-btn" class="btn-secondary">
-            Copiar Link da Sala
-        </button>
+        <!-- ========================================================= -->
+        <!-- EMOJIS -->
+        <!-- ========================================================= -->
 
+        <div id="emoji-panel" class="hidden">
+            <div id="emoji-search"></div>
+            <div id="emoji-list"></div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- PREVIEW -->
+        <!-- ========================================================= -->
+
+        <div id="preview-area" class="hidden"></div>
+
+        <!-- ========================================================= -->
+        <!-- FOOTER -->
+        <!-- ========================================================= -->
+
+        <footer class="chat-footer">
+
+            <!-- LINHA SUPERIOR: CAMPO + ENVIAR -->
+            <div class="composer-row">
+                <input
+                    id="message-input"
+                    type="text"
+                    placeholder="Digite uma mensagem..."
+                    autocomplete="off"
+                    enterkeyhint="send"
+                >
+
+                <button
+                    id="send-btn"
+                    class="send-btn"
+                    type="button"
+                    title="Enviar"
+                    aria-label="Enviar mensagem"
+                >
+                    ➤
+                </button>
+            </div>
+
+            <!-- LINHA INFERIOR: FERRAMENTAS -->
+            <div class="tools-row">
+                <button
+                    id="emoji-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Emoji"
+                    aria-label="Abrir emojis"
+                >
+                    😊
+                </button>
+
+                <button
+                    id="camera-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Câmera"
+                    aria-label="Abrir câmera"
+                >
+                    📷
+                </button>
+
+                <button
+                    id="gallery-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Galeria"
+                    aria-label="Abrir galeria"
+                >
+                    🖼️
+                </button>
+
+                <button
+                    id="attach-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Arquivo"
+                    aria-label="Anexar arquivo"
+                >
+                    📎
+                </button>
+
+                <button
+                    id="audio-btn"
+                    class="icon-btn"
+                    type="button"
+                    title="Áudio"
+                    aria-label="Gravar áudio"
+                >
+                    🎤
+                </button>
+            </div>
+
+            <!-- INPUTS OCULTOS -->
+            <input
+                id="image-input"
+                type="file"
+                accept="image/*"
+                hidden
+            >
+
+            <input
+                id="camera-input"
+                type="file"
+                accept="image/*"
+                capture="environment"
+                hidden
+            >
+
+            <input
+                id="file-input"
+                type="file"
+                hidden
+            >
+
+            <input
+                id="video-input"
+                type="file"
+                accept="video/*"
+                hidden
+            >
+        </footer>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- VISUALIZADOR DE IMAGEM -->
+    <!-- ========================================================= -->
+
+    <div id="image-viewer" class="hidden">
+        <img
+            id="viewer-image"
+            src=""
+            alt="Imagem"
+        >
     </div>
 
-</section>
-
-<!-- ========================================================= -->
-
-<!-- CHAT -->
-
-<!-- ========================================================= -->
-
-<section id="chat-screen" class="screen hidden">
-
-<header class="chat-header">
-
-<div class="header-left">
-
-<div id="status-dot" class="status-dot offline"></div>
-
-<div>
-
-<div class="chat-title">
-
-Anônimo
-
-</div>
-
-<div id="chat-status" class="chat-status">
-
-Aguardando conexão...
-
-</div>
-
-</div>
-
-</div>
-
-<div class="header-right">
-
-<button
-id="theme-btn"
-class="icon-btn"
-title="Tema">
-
-🌙
-
-</button>
-
-<button
-id="nudge-btn"
-class="icon-btn"
-title="Chamar atenção">
-
-🔔
-
-</button>
-
-<button
-id="restart-btn"
-class="icon-btn"
-title="Encerrar conversa">
-
-🚪
-
-</button>
-
-</div>
-
-</header>
-
-<!-- ========================================================= -->
-
-<!-- ÁREA DAS MENSAGENS -->
-
-<!-- ========================================================= -->
-
-<main id="chat-messages">
-
-</main>
-
-<!-- ========================================================= -->
-
-<!-- DIGITANDO -->
-
-<!-- ========================================================= -->
-
-<div
-id="typing-indicator"
-class="typing hidden">
-
-A outra pessoa está digitando...
-
-</div>
-
-<!-- ========================================================= -->
-
-<!-- EMOJIS -->
-
-<!-- ========================================================= -->
-
-<div
-id="emoji-panel"
-class="hidden">
-
-<div id="emoji-search">
-
-</div>
-
-<div id="emoji-list">
-
-</div>
-
-</div>
-
-<!-- ========================================================= -->
-
-<!-- PREVIEW -->
-
-<!-- ========================================================= -->
-
-<div
-id="preview-area"
-class="hidden">
-
-</div>
-
-<!-- ========================================================= -->
-
-<!-- FOOTER -->
-
-<!-- ========================================================= -->
-
-<footer class="chat-footer">
-
-<button
-id="emoji-btn"
-class="icon-btn"
-title="Emoji">
-
-😊
-
-</button>
-
-<button
-id="camera-btn"
-class="icon-btn"
-title="Câmera">
-
-📷
-
-</button>
-
-<button
-id="gallery-btn"
-class="icon-btn"
-title="Galeria">
-
-🖼️
-
-</button>
-
-<button
-id="attach-btn"
-class="icon-btn"
-title="Arquivo">
-
-📎
-
-</button>
-
-<button
-id="audio-btn"
-class="icon-btn"
-title="Áudio">
-
-🎤
-
-</button>
-
-<input
-id="message-input"
-type="text"
-placeholder="Digite uma mensagem..."
-autocomplete="off">
-
-<button
-id="send-btn"
-class="send-btn"
-title="Enviar">
-
-➤
-
-</button>
-
-<!-- INPUTS OCULTOS -->
-
-<input
-id="image-input"
-type="file"
-accept="image/*"
-hidden>
-
-<input
-id="camera-input"
-type="file"
-accept="image/*"
-capture="environment"
-hidden>
-
-<input
-id="file-input"
-type="file"
-hidden>
-
-<input
-id="video-input"
-type="file"
-accept="video/*"
-hidden>
-
-</footer>
-
-</section>
-
-<!-- ========================================================= -->
-
-<!-- VISUALIZADOR DE IMAGEM -->
-
-<!-- ========================================================= -->
-
-<div
-id="image-viewer"
-class="hidden">
-
-<img
-id="viewer-image"
-src=""
-alt="Imagem">
-
-</div>
-
-<!-- ========================================================= -->
-
-<!-- LOADING -->
-
-<!-- ========================================================= -->
-
-<div
-id="loading-modal"
-class="hidden">
-
-<div class="spinner"></div>
-
-</div>
-
-<!-- ========================================================= -->
-
-<!-- JAVASCRIPT -->
-
-<!-- ========================================================= -->
-
-<script src="js/app.js"></script>
-
-<script src="js/ui.js"></script>
-
-<script src="js/peer.js"></script>
-
-<script src="js/chat.js"></script>
-
-<script src="js/typing.js"></script>
-
-<script src="js/status.js"></script>
-
-<script src="js/receipt.js"></script>
-
-<script src="js/emoji.js"></script>
-
-<script src="js/files.js"></script>
-
-<script src="js/camera.js"></script>
-
-<script src="js/audio.js"></script>
-
-<script src="js/crypto.js"></script>
-
-<script src="js/notifications.js"></script>
+    <!-- ========================================================= -->
+    <!-- LOADING -->
+    <!-- ========================================================= -->
+
+    <div id="loading-modal" class="hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================================= -->
+
+    <script src="js/app.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/peer.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/typing.js"></script>
+    <script src="js/status.js"></script>
+    <script src="js/receipt.js"></script>
+    <script src="js/emoji.js"></script>
+    <script src="js/files.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/crypto.js"></script>
+    <script src="js/notifications.js"></script>
 
 </body>
 
