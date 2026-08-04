@@ -450,3 +450,234 @@ IMPRESSÃO
     }
 
 }
+
+/*
+==================================================
+NOVO RODAPÉ EM DUAS LINHAS
+==================================================
+*/
+
+/*
+Linha principal do rodapé.
+Agora o campo de texto fica em cima
+e as ferramentas ficam embaixo.
+*/
+
+.chat-footer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 8px;
+
+    padding-top: 10px;
+    padding-right: 12px;
+    padding-left: 12px;
+
+    padding-bottom: max(
+        10px,
+        env(safe-area-inset-bottom)
+    );
+
+    overflow: hidden;
+}
+
+/*
+==================================================
+LINHA DO CAMPO DE TEXTO
+==================================================
+*/
+
+.composer-row {
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+/*
+O campo ocupa todo o espaço disponível,
+sem empurrar o botão para fora da tela.
+*/
+
+.composer-row #message-input {
+    flex: 1 1 0;
+
+    width: 0;
+    min-width: 0;
+    max-width: none;
+
+    height: 48px;
+
+    margin: 0;
+}
+
+/*
+Botão de envio permanece sempre visível.
+*/
+
+.composer-row .send-btn {
+    flex: 0 0 48px;
+
+    width: 48px;
+    height: 48px;
+
+    margin: 0;
+}
+
+/*
+==================================================
+LINHA DAS FERRAMENTAS
+==================================================
+*/
+
+.tools-row {
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    gap: 8px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.tools-row::-webkit-scrollbar {
+    display: none;
+}
+
+.tools-row .icon-btn {
+    flex: 0 0 44px;
+
+    width: 44px;
+    height: 40px;
+
+    margin: 0;
+
+    border-radius: 12px;
+}
+
+/*
+==================================================
+CELULARES
+==================================================
+*/
+
+@media (max-width: 600px) {
+
+    .chat-footer {
+        gap: 6px;
+
+        padding-top: 8px;
+        padding-right: 10px;
+        padding-left: 10px;
+
+        padding-bottom: max(
+            8px,
+            env(safe-area-inset-bottom)
+        );
+    }
+
+    .composer-row {
+        gap: 7px;
+    }
+
+    .composer-row #message-input {
+        height: 46px;
+
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+
+    .composer-row .send-btn {
+        flex-basis: 46px;
+
+        width: 46px;
+        height: 46px;
+    }
+
+    .tools-row {
+        justify-content: space-between;
+
+        gap: 4px;
+    }
+
+    .tools-row .icon-btn {
+        flex-basis: 42px;
+
+        width: 42px;
+        height: 38px;
+    }
+
+}
+
+/*
+==================================================
+CELULARES PEQUENOS
+==================================================
+*/
+
+@media (max-width: 370px) {
+
+    .chat-footer {
+        padding-right: 7px;
+        padding-left: 7px;
+    }
+
+    .tools-row .icon-btn {
+        flex-basis: 38px;
+
+        width: 38px;
+        height: 36px;
+
+        font-size: 18px;
+    }
+
+}
+
+/*
+==================================================
+TECLADO VIRTUAL ABERTO
+==================================================
+*/
+
+html.keyboard-open .chat-footer {
+    gap: 5px;
+
+    padding-top: 6px;
+
+    padding-bottom: max(
+        6px,
+        env(safe-area-inset-bottom)
+    );
+}
+
+html.keyboard-open .tools-row .icon-btn {
+    height: 34px;
+}
+
+/*
+Em telas muito baixas, como no modo paisagem
+com o teclado aberto, a linha de ferramentas
+pode ser escondida para preservar o campo.
+*/
+
+@media (orientation: landscape) and (max-height: 390px) {
+
+    html.keyboard-open .tools-row {
+        display: none;
+    }
+
+}
