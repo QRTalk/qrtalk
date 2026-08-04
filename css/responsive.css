@@ -1,271 +1,452 @@
 /*
-==========================================
+==================================================
 QRTalk 3.0
-Responsive
-==========================================
+Responsividade e teclado virtual
+==================================================
 */
 
-/* =====================================
-   DESKTOP
-===================================== */
+/*
+A variável será atualizada pelo app.js usando
+a área realmente visível do navegador.
 
-@media (min-width:1200px){
+O 100dvh funciona como fallback moderno.
+*/
 
-    .screen{
+:root {
+    --app-height: 100vh;
+}
 
-        max-width:520px;
+@supports (height: 100dvh) {
+    :root {
+        --app-height: 100dvh;
+    }
+}
 
-        margin:auto;
+/*
+==================================================
+TRAVAR A PÁGINA EXTERNA
+==================================================
+
+Somente a área de mensagens poderá rolar.
+Isso impede que o usuário precise rolar a página
+inteira para encontrar o campo de texto.
+*/
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+body {
+    position: fixed;
+    inset: 0;
+}
+
+/*
+==================================================
+TELA PRINCIPAL
+==================================================
+*/
+
+.screen {
+    width: 100%;
+    height: var(--app-height);
+    min-height: 0;
+    max-height: var(--app-height);
+
+    margin: 0 auto;
+
+    overflow: hidden;
+}
+
+/*
+A tela do chat precisa permitir que a área central
+encolha quando o teclado aparecer.
+*/
+
+#chat-screen {
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+/*
+==================================================
+CABEÇALHO E RODAPÉ
+==================================================
+*/
+
+.chat-header,
+.chat-footer,
+#typing-indicator,
+#emoji-panel,
+#preview-area {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.chat-header {
+    width: 100%;
+
+    padding-top: max(
+        0px,
+        env(safe-area-inset-top)
+    );
+}
+
+.chat-footer {
+    width: 100%;
+    min-width: 0;
+
+    flex-wrap: nowrap;
+
+    padding-bottom: max(
+        10px,
+        env(safe-area-inset-bottom)
+    );
+}
+
+/*
+Impede que os botões sejam esmagados.
+*/
+
+.chat-footer .icon-btn,
+.chat-footer .send-btn {
+    flex: 0 0 auto;
+}
+
+/*
+Esse ponto é muito importante.
+
+Sem min-width: 0, o campo tenta manter a largura
+do placeholder e empurra o botão de enviar para
+fora da tela.
+*/
+
+#message-input {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    max-width: 100%;
+}
+
+/*
+==================================================
+ÁREA DAS MENSAGENS
+==================================================
+*/
+
+#chat-messages {
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    overscroll-behavior-y: contain;
+
+    -webkit-overflow-scrolling: touch;
+
+    scroll-behavior: smooth;
+    scroll-padding-bottom: 20px;
+}
+
+/*
+==================================================
+DESKTOP
+==================================================
+*/
+
+@media (min-width: 1200px) {
+
+    .screen {
+        width: 100%;
+        max-width: 520px;
 
         box-shadow:
-            0 20px 60px rgba(0,0,0,.45);
-
+            0 20px 60px
+            rgba(0, 0, 0, 0.45);
     }
 
 }
 
-/* =====================================
-   NOTEBOOK
-===================================== */
+/*
+==================================================
+NOTEBOOK
+==================================================
+*/
 
-@media (max-width:1199px){
+@media (min-width: 601px) and (max-width: 1199px) {
 
-    .screen{
-
-        width:100%;
-
+    .screen {
+        width: 100%;
+        max-width: 520px;
     }
 
 }
 
-/* =====================================
-   TABLETS
-===================================== */
+/*
+==================================================
+TABLETS
+==================================================
+*/
 
-@media (max-width:900px){
+@media (max-width: 900px) {
 
-    .card{
-
-        width:94%;
-
+    .card {
+        width: 94%;
     }
 
 }
 
-/* =====================================
-   CELULARES
-===================================== */
+/*
+==================================================
+CELULARES
+==================================================
+*/
 
-@media (max-width:600px){
+@media (max-width: 600px) {
 
-    body{
-
-        padding:0;
-
+    body {
+        padding: 0;
     }
 
-    .screen{
+    .screen {
+        width: 100%;
+        max-width: none;
 
-        width:100vw;
-        height:100vh;
+        height: var(--app-height);
+        min-height: 0;
+        max-height: var(--app-height);
 
+        border-radius: 0;
     }
 
-    .card{
+    .card {
+        width: 100%;
+        height: 100%;
 
-        width:100%;
-        height:100%;
+        border-radius: 0;
 
-        border-radius:0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
-        display:flex;
-
-        flex-direction:column;
-
-        justify-content:center;
-
-        padding:28px;
-
+        padding: 28px;
     }
 
-    #qrcode-container{
-
-        width:210px;
-        height:210px;
-
-    }
-
-}
-
-/* =====================================
-   CELULARES PEQUENOS
-===================================== */
-
-@media (max-width:430px){
-
-    .logo{
-
-        font-size:34px;
-
-    }
-
-    .subtitle{
-
-        font-size:14px;
-
-    }
-
-    .chat-header{
-
-        height:64px;
-
-        padding:0 10px;
-
-    }
-
-    .chat-footer{
-
-        padding:10px;
-
-        gap:6px;
-
-    }
-
-    .icon-btn{
-
-        width:40px;
-        height:40px;
-
-        font-size:20px;
-
-    }
-
-    .send-btn{
-
-        width:46px;
-        height:46px;
-
-    }
-
-    #message-input{
-
-        height:44px;
-
-        font-size:14px;
-
-    }
-
-    .bubble{
-
-        font-size:14px;
-
+    #qrcode-container {
+        width: 210px;
+        height: 210px;
     }
 
 }
 
-/* =====================================
-   TELAS MUITO PEQUENAS
-===================================== */
+/*
+==================================================
+CELULARES MÉDIOS
+==================================================
+*/
 
-@media (max-width:340px){
+@media (max-width: 430px) {
 
-    .icon-btn{
-
-        width:36px;
-        height:36px;
-
-        font-size:18px;
-
+    .logo {
+        font-size: 34px;
     }
 
-    .send-btn{
-
-        width:42px;
-        height:42px;
-
+    .subtitle {
+        font-size: 14px;
     }
 
-    .chat-title{
+    .chat-header {
+        min-height: 64px;
+        height: auto;
 
-        font-size:14px;
-
+        padding-right: 10px;
+        padding-left: 10px;
     }
 
-}
+    .chat-footer {
+        gap: 4px;
 
-/* =====================================
-   LANDSCAPE
-===================================== */
-
-@media (orientation:landscape) and (max-height:550px){
-
-    .chat-header{
-
-        height:58px;
-
+        padding-top: 9px;
+        padding-right: 7px;
+        padding-left: 7px;
     }
 
-    .chat-footer{
+    .icon-btn {
+        width: 36px;
+        height: 40px;
 
-        padding:8px;
-
+        font-size: 20px;
     }
 
-    #emoji-panel{
-
-        height:180px;
-
+    .send-btn {
+        width: 46px;
+        height: 46px;
     }
 
-}
+    #message-input {
+        height: 44px;
 
-/* =====================================
-   SAFE AREA (IPHONE)
-===================================== */
+        padding-right: 13px;
+        padding-left: 13px;
 
-.chat-header{
+        font-size: 14px;
+    }
 
-    padding-top:env(safe-area-inset-top);
-
-}
-
-.chat-footer{
-
-    padding-bottom:calc(12px + env(safe-area-inset-bottom));
-
-}
-
-/* =====================================
-   DOBRÁVEIS
-===================================== */
-
-@media (spanning:single-fold-vertical){
-
-    .screen{
-
-        width:100%;
-
+    .bubble {
+        font-size: 14px;
     }
 
 }
 
-/* =====================================
-   IMPRESSÃO
-===================================== */
+/*
+==================================================
+CELULARES PEQUENOS
+==================================================
+*/
 
-@media print{
+@media (max-width: 370px) {
 
-    body{
+    .chat-footer {
+        gap: 2px;
 
-        background:white;
+        padding-right: 4px;
+        padding-left: 4px;
+    }
 
+    .icon-btn {
+        width: 32px;
+        height: 38px;
+
+        font-size: 18px;
+    }
+
+    .send-btn {
+        width: 42px;
+        height: 42px;
+    }
+
+    #message-input {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .chat-title {
+        font-size: 14px;
+    }
+
+}
+
+/*
+==================================================
+TECLADO ABERTO
+==================================================
+
+A classe keyboard-open será adicionada pelo app.js.
+*/
+
+html.keyboard-open .chat-footer {
+    padding-top: 7px;
+    padding-bottom: max(
+        7px,
+        env(safe-area-inset-bottom)
+    );
+}
+
+html.keyboard-open #chat-messages {
+    scroll-padding-bottom: 12px;
+}
+
+/*
+O painel de emojis não deve permanecer aberto
+atrás do teclado.
+*/
+
+html.keyboard-open #emoji-panel {
+    max-height: 36vh;
+}
+
+/*
+==================================================
+MODO PAISAGEM
+==================================================
+*/
+
+@media (orientation: landscape) and (max-height: 550px) {
+
+    .chat-header {
+        min-height: 54px;
+        height: auto;
+    }
+
+    .chat-footer {
+        padding-top: 6px;
+        padding-bottom: max(
+            6px,
+            env(safe-area-inset-bottom)
+        );
+    }
+
+    #emoji-panel {
+        height: 180px;
+    }
+
+}
+
+/*
+==================================================
+TELAS DOBRÁVEIS
+==================================================
+*/
+
+@media (spanning: single-fold-vertical) {
+
+    .screen {
+        width: 100%;
+    }
+
+}
+
+/*
+==================================================
+IMPRESSÃO
+==================================================
+*/
+
+@media print {
+
+    html,
+    body {
+        position: static;
+
+        height: auto;
+
+        overflow: visible;
+    }
+
+    body {
+        background: white;
+    }
+
+    .screen {
+        height: auto;
+        max-height: none;
     }
 
     .chat-footer,
-    .chat-header{
-
-        display:none;
-
+    .chat-header {
+        display: none;
     }
 
 }
