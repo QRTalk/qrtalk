@@ -1,0 +1,271 @@
+/*
+==========================================
+QRTalk 3.0
+Responsive
+==========================================
+*/
+
+/* =====================================
+   DESKTOP
+===================================== */
+
+@media (min-width:1200px){
+
+    .screen{
+
+        max-width:520px;
+
+        margin:auto;
+
+        box-shadow:
+            0 20px 60px rgba(0,0,0,.45);
+
+    }
+
+}
+
+/* =====================================
+   NOTEBOOK
+===================================== */
+
+@media (max-width:1199px){
+
+    .screen{
+
+        width:100%;
+
+    }
+
+}
+
+/* =====================================
+   TABLETS
+===================================== */
+
+@media (max-width:900px){
+
+    .card{
+
+        width:94%;
+
+    }
+
+}
+
+/* =====================================
+   CELULARES
+===================================== */
+
+@media (max-width:600px){
+
+    body{
+
+        padding:0;
+
+    }
+
+    .screen{
+
+        width:100vw;
+        height:100vh;
+
+    }
+
+    .card{
+
+        width:100%;
+        height:100%;
+
+        border-radius:0;
+
+        display:flex;
+
+        flex-direction:column;
+
+        justify-content:center;
+
+        padding:28px;
+
+    }
+
+    #qrcode-container{
+
+        width:210px;
+        height:210px;
+
+    }
+
+}
+
+/* =====================================
+   CELULARES PEQUENOS
+===================================== */
+
+@media (max-width:430px){
+
+    .logo{
+
+        font-size:34px;
+
+    }
+
+    .subtitle{
+
+        font-size:14px;
+
+    }
+
+    .chat-header{
+
+        height:64px;
+
+        padding:0 10px;
+
+    }
+
+    .chat-footer{
+
+        padding:10px;
+
+        gap:6px;
+
+    }
+
+    .icon-btn{
+
+        width:40px;
+        height:40px;
+
+        font-size:20px;
+
+    }
+
+    .send-btn{
+
+        width:46px;
+        height:46px;
+
+    }
+
+    #message-input{
+
+        height:44px;
+
+        font-size:14px;
+
+    }
+
+    .bubble{
+
+        font-size:14px;
+
+    }
+
+}
+
+/* =====================================
+   TELAS MUITO PEQUENAS
+===================================== */
+
+@media (max-width:340px){
+
+    .icon-btn{
+
+        width:36px;
+        height:36px;
+
+        font-size:18px;
+
+    }
+
+    .send-btn{
+
+        width:42px;
+        height:42px;
+
+    }
+
+    .chat-title{
+
+        font-size:14px;
+
+    }
+
+}
+
+/* =====================================
+   LANDSCAPE
+===================================== */
+
+@media (orientation:landscape) and (max-height:550px){
+
+    .chat-header{
+
+        height:58px;
+
+    }
+
+    .chat-footer{
+
+        padding:8px;
+
+    }
+
+    #emoji-panel{
+
+        height:180px;
+
+    }
+
+}
+
+/* =====================================
+   SAFE AREA (IPHONE)
+===================================== */
+
+.chat-header{
+
+    padding-top:env(safe-area-inset-top);
+
+}
+
+.chat-footer{
+
+    padding-bottom:calc(12px + env(safe-area-inset-bottom));
+
+}
+
+/* =====================================
+   DOBRÁVEIS
+===================================== */
+
+@media (spanning:single-fold-vertical){
+
+    .screen{
+
+        width:100%;
+
+    }
+
+}
+
+/* =====================================
+   IMPRESSÃO
+===================================== */
+
+@media print{
+
+    body{
+
+        background:white;
+
+    }
+
+    .chat-footer,
+    .chat-header{
+
+        display:none;
+
+    }
+
+}

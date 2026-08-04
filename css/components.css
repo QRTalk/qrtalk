@@ -1,0 +1,438 @@
+/*
+==========================================
+QRTalk 3.0
+Componentes
+==========================================
+*/
+
+/* ==========================
+   BOTÕES
+========================== */
+
+.btn-primary{
+
+    background:var(--primary);
+
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:999px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.btn-primary:hover{
+
+    background:var(--primary-dark);
+
+    transform:translateY(-1px);
+
+}
+
+.btn-primary:active{
+
+    transform:scale(.96);
+
+}
+
+.btn-secondary{
+
+    background:#334155;
+
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:999px;
+
+    font-weight:600;
+
+}
+
+.btn-secondary:hover{
+
+    background:#475569;
+
+}
+
+/* ==========================
+   BOTÕES DE ÍCONE
+========================== */
+
+.icon-btn{
+
+    width:44px;
+
+    height:44px;
+
+    border-radius:50%;
+
+    background:transparent;
+
+    color:var(--text2);
+
+    font-size:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.25s;
+
+}
+
+.icon-btn:hover{
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+}
+
+.icon-btn:active{
+
+    transform:scale(.90);
+
+}
+
+/* ==========================
+   BOTÃO ENVIAR
+========================== */
+
+.send-btn{
+
+    width:52px;
+
+    height:52px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    color:white;
+
+    font-size:20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex-shrink:0;
+
+    box-shadow:
+
+        0 5px 18px rgba(37,99,235,.45);
+
+}
+
+.send-btn:hover{
+
+    transform:scale(1.05);
+
+}
+
+.send-btn:active{
+
+    transform:scale(.94);
+
+}
+
+/* ==========================
+   HEADER
+========================== */
+
+.chat-header{
+
+    height:72px;
+
+    padding:0 18px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:rgba(15,23,42,.85);
+
+    backdrop-filter:blur(12px);
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.header-right{
+
+    display:flex;
+
+    gap:6px;
+
+}
+
+/* ==========================
+   STATUS
+========================== */
+
+.status-dot{
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:50%;
+
+}
+
+.status-dot.online{
+
+    background:#22c55e;
+
+    box-shadow:
+
+        0 0 12px #22c55e;
+
+}
+
+.status-dot.offline{
+
+    background:#64748b;
+
+}
+
+.chat-title{
+
+    font-size:16px;
+
+    font-weight:600;
+
+}
+
+.chat-status{
+
+    font-size:12px;
+
+    color:var(--text3);
+
+}
+
+/* ==========================
+   ÁREA DAS MENSAGENS
+========================== */
+
+#chat-messages{
+
+    flex:1;
+
+    overflow:auto;
+
+    padding:18px;
+
+}
+
+/* ==========================
+   SCROLL
+========================== */
+
+#chat-messages::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+#chat-messages::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+#chat-messages::-webkit-scrollbar-thumb{
+
+    background:#334155;
+
+    border-radius:999px;
+
+}
+
+/* ==========================
+   RODAPÉ
+========================== */
+
+.chat-footer{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:14px;
+
+    background:rgba(15,23,42,.90);
+
+    backdrop-filter:blur(10px);
+
+    border-top:1px solid var(--border);
+
+}
+
+/* ==========================
+   INPUT
+========================== */
+
+#message-input{
+
+    flex:1;
+
+    height:48px;
+
+    border-radius:999px;
+
+    background:#1e293b;
+
+    color:white;
+
+    padding:0 18px;
+
+    font-size:15px;
+
+}
+
+#message-input::placeholder{
+
+    color:#94a3b8;
+
+}
+
+/* ==========================
+   DIGITANDO
+========================== */
+
+.typing{
+
+    padding:6px 20px;
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+    font-style:italic;
+
+}
+
+/* ==========================
+   EMOJI PANEL
+========================== */
+
+#emoji-panel{
+
+    height:280px;
+
+    background:#172033;
+
+    border-top:1px solid var(--border);
+
+}
+
+/* ==========================
+   BADGES
+========================== */
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:4px 10px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+.badge.success{
+
+    background:#14532d;
+
+    color:#bbf7d0;
+
+}
+
+.badge.warning{
+
+    background:#78350f;
+
+    color:#fde68a;
+
+}
+
+.badge.danger{
+
+    background:#7f1d1d;
+
+    color:#fecaca;
+
+}
+
+/* ==========================
+   LOADING
+========================== */
+
+.spinner{
+
+    width:22px;
+
+    height:22px;
+
+    border-radius:50%;
+
+    border:3px solid rgba(255,255,255,.15);
+
+    border-top:3px solid white;
+
+    animation:spin .8s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}

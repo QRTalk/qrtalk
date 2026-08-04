@@ -1,0 +1,579 @@
+/*
+==========================================
+QRTalk 3.0
+Animations
+==========================================
+*/
+
+/* ==========================================
+   TRANSIÇÕES GLOBAIS
+========================================== */
+
+*{
+
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        transform .20s ease,
+        opacity .20s ease;
+
+}
+
+/* ==========================================
+   ENTRADA DA TELA
+========================================== */
+
+.screen{
+
+    animation:screenFade .35s ease;
+
+}
+
+@keyframes screenFade{
+
+    from{
+
+        opacity:0;
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================
+   CARD DA TELA INICIAL
+========================================== */
+
+.card{
+
+    animation:cardShow .45s ease;
+
+}
+
+@keyframes cardShow{
+
+    from{
+
+        opacity:0;
+        transform:scale(.96);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==========================================
+   QR CODE
+========================================== */
+
+#qrcode-container{
+
+    animation:qrAppear .45s ease;
+
+}
+
+@keyframes qrAppear{
+
+    from{
+
+        opacity:0;
+        transform:scale(.80);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.logo{
+
+    animation:logoFloat 4s ease-in-out infinite;
+
+}
+
+@keyframes logoFloat{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-6px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================
+   STATUS ONLINE
+========================================== */
+
+.status-dot.online{
+
+    animation:onlinePulse 1.8s infinite;
+
+}
+
+@keyframes onlinePulse{
+
+    0%{
+
+        box-shadow:0 0 0 0 rgba(34,197,94,.65);
+
+    }
+
+    70%{
+
+        box-shadow:0 0 0 12px rgba(34,197,94,0);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 0 rgba(34,197,94,0);
+
+    }
+
+}
+
+/* ==========================================
+   BOTÕES
+========================================== */
+
+.icon-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.icon-btn:active{
+
+    transform:scale(.90);
+
+}
+
+.send-btn:hover{
+
+    transform:scale(1.08);
+
+}
+
+.send-btn:active{
+
+    transform:scale(.92);
+
+}
+
+/* ==========================================
+   PAINEL DE EMOJIS
+========================================== */
+
+#emoji-panel{
+
+    animation:emojiOpen .25s ease;
+
+}
+
+@keyframes emojiOpen{
+
+    from{
+
+        opacity:0;
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================
+   MENSAGENS
+========================================== */
+
+.message{
+
+    animation:messageIn .20s ease;
+
+}
+
+@keyframes messageIn{
+
+    from{
+
+        opacity:0;
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================
+   IMAGENS
+========================================== */
+
+.message-image{
+
+    transition:.20s;
+
+}
+
+.message-image:hover{
+
+    transform:scale(1.02);
+
+}
+
+.message-image:active{
+
+    transform:scale(.98);
+
+}
+
+/* ==========================================
+   NUDGE
+========================================== */
+
+.shake{
+
+    animation:shake .45s;
+
+}
+
+@keyframes shake{
+
+    10%,90%{
+
+        transform:translateX(-2px);
+
+    }
+
+    20%,80%{
+
+        transform:translateX(4px);
+
+    }
+
+    30%,50%,70%{
+
+        transform:translateX(-6px);
+
+    }
+
+    40%,60%{
+
+        transform:translateX(6px);
+
+    }
+
+}
+
+/* ==========================================
+   TYPING
+========================================== */
+
+.typing{
+
+    animation:fadeLoop 1.4s infinite;
+
+}
+
+@keyframes fadeLoop{
+
+    0%{
+
+        opacity:.4;
+
+    }
+
+    50%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        opacity:.4;
+
+    }
+
+}
+
+/* ==========================================
+   UPLOAD
+========================================== */
+
+.upload-progress{
+
+    overflow:hidden;
+
+    border-radius:999px;
+
+    background:#243447;
+
+    height:8px;
+
+}
+
+.upload-progress-bar{
+
+    height:100%;
+
+    width:0;
+
+    background:linear-gradient(
+        90deg,
+        #3b82f6,
+        #60a5fa
+    );
+
+    transition:width .2s linear;
+
+}
+
+/* ==========================================
+   GRAVAÇÃO DE ÁUDIO
+========================================== */
+
+.recording{
+
+    animation:recordPulse 1s infinite;
+
+}
+
+@keyframes recordPulse{
+
+    0%{
+
+        transform:scale(1);
+
+        box-shadow:0 0 0 0 rgba(239,68,68,.6);
+
+    }
+
+    70%{
+
+        transform:scale(1.06);
+
+        box-shadow:0 0 0 18px rgba(239,68,68,0);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+        box-shadow:0 0 0 0 rgba(239,68,68,0);
+
+    }
+
+}
+
+/* ==========================================
+   PREVIEW
+========================================== */
+
+.preview{
+
+    animation:previewOpen .20s ease;
+
+}
+
+@keyframes previewOpen{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.spinner{
+
+    animation:spin .8s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+   RIPPLE
+========================================== */
+
+.ripple{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.ripple::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:10px;
+    height:10px;
+
+    background:rgba(255,255,255,.35);
+
+    border-radius:50%;
+
+    transform:scale(0);
+
+    opacity:0;
+
+    pointer-events:none;
+
+}
+
+.ripple:active::after{
+
+    animation:ripple .45s;
+
+}
+
+@keyframes ripple{
+
+    from{
+
+        transform:scale(0);
+
+        opacity:.8;
+
+    }
+
+    to{
+
+        transform:scale(18);
+
+        opacity:0;
+
+    }
+
+}
+
+/* ==========================================
+   FADE
+========================================== */
+
+.fade-in{
+
+    animation:fadeIn .25s ease;
+
+}
+
+.fade-out{
+
+    animation:fadeOut .25s ease;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+@keyframes fadeOut{
+
+    from{
+
+        opacity:1;
+
+    }
+
+    to{
+
+        opacity:0;
+
+    }
+
+}

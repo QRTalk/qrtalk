@@ -1,0 +1,450 @@
+/*
+==========================================
+QRTalk 3.0
+Mensagens
+==========================================
+*/
+
+.message{
+
+    position:relative;
+
+    display:flex;
+
+    flex-direction:column;
+
+    max-width:78%;
+
+    margin-bottom:14px;
+
+    animation:messageAppear .20s ease;
+
+}
+
+/* ================================
+   MENSAGENS ENVIADAS
+================================ */
+
+.message.sent{
+
+    align-self:flex-end;
+
+}
+
+.message.sent .bubble{
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    color:white;
+
+    border-bottom-right-radius:6px;
+
+}
+
+/* ================================
+   MENSAGENS RECEBIDAS
+================================ */
+
+.message.received{
+
+    align-self:flex-start;
+
+}
+
+.message.received .bubble{
+
+    background:#243447;
+
+    color:white;
+
+    border-bottom-left-radius:6px;
+
+}
+
+/* ================================
+   BALÃO
+================================ */
+
+.bubble{
+
+    padding:12px 15px;
+
+    border-radius:18px;
+
+    line-height:1.5;
+
+    font-size:15px;
+
+    word-break:break-word;
+
+    box-shadow:
+
+        0 5px 12px rgba(0,0,0,.12);
+
+}
+
+/* ================================
+   TEXTO
+================================ */
+
+.message-text{
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+
+}
+
+/* ================================
+   IMAGENS
+================================ */
+
+.message-image{
+
+    max-width:260px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    transition:.20s;
+
+}
+
+.message-image:hover{
+
+    transform:scale(1.02);
+
+}
+
+/* ================================
+   ÁUDIOS
+================================ */
+
+.message-audio{
+
+    width:240px;
+
+}
+
+/* ================================
+   ARQUIVOS
+================================ */
+
+.message-file{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.file-icon{
+
+    width:44px;
+
+    height:44px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.12);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+}
+
+.file-info{
+
+    flex:1;
+
+}
+
+.file-name{
+
+    font-weight:600;
+
+}
+
+.file-size{
+
+    font-size:12px;
+
+    opacity:.7;
+
+}
+
+/* ================================
+   RODAPÉ DA MENSAGEM
+================================ */
+
+.message-footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+    gap:5px;
+
+    margin-top:5px;
+
+    font-size:11px;
+
+    opacity:.75;
+
+}
+
+/* ================================
+   HORÁRIO
+================================ */
+
+.message-time{
+
+    font-size:11px;
+
+}
+
+/* ================================
+   STATUS
+================================ */
+
+.message-status{
+
+    font-size:13px;
+
+}
+
+/* enviado */
+
+.status-sent{
+
+    color:#dbeafe;
+
+}
+
+/* entregue */
+
+.status-delivered{
+
+    color:#dbeafe;
+
+}
+
+/* lido */
+
+.status-read{
+
+    color:#4fc3f7;
+
+}
+
+/* ================================
+   REAÇÕES
+================================ */
+
+.reactions{
+
+    display:flex;
+
+    gap:4px;
+
+    margin-top:4px;
+
+}
+
+.reaction{
+
+    background:#334155;
+
+    border-radius:999px;
+
+    padding:2px 8px;
+
+    font-size:13px;
+
+}
+
+/* ================================
+   RESPOSTA
+================================ */
+
+.reply-box{
+
+    border-left:4px solid rgba(255,255,255,.25);
+
+    padding-left:10px;
+
+    margin-bottom:8px;
+
+    opacity:.85;
+
+    font-size:13px;
+
+}
+
+/* ================================
+   MENSAGEM DO SISTEMA
+================================ */
+
+.system-message{
+
+    align-self:center;
+
+    background:rgba(255,255,255,.08);
+
+    color:#cbd5e1;
+
+    padding:7px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    margin:10px auto;
+
+}
+
+/* ================================
+   DIGITANDO
+================================ */
+
+.typing-bubble{
+
+    display:flex;
+
+    gap:5px;
+
+    padding:12px 16px;
+
+    width:64px;
+
+    border-radius:20px;
+
+    background:#243447;
+
+}
+
+.typing-bubble span{
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    background:white;
+
+    animation:typingDots 1.2s infinite;
+
+}
+
+.typing-bubble span:nth-child(2){
+
+    animation-delay:.2s;
+
+}
+
+.typing-bubble span:nth-child(3){
+
+    animation-delay:.4s;
+
+}
+
+/* ================================
+   ÁREA DE PRÉ-VISUALIZAÇÃO
+================================ */
+
+.preview{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    background:#1f2937;
+
+    border-radius:16px;
+
+    padding:10px;
+
+    margin:8px;
+
+}
+
+.preview img{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:10px;
+
+    object-fit:cover;
+
+}
+
+/* ================================
+   ANIMAÇÕES
+================================ */
+
+@keyframes messageAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(12px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+@keyframes typingDots{
+
+    0%{
+
+        opacity:.2;
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        opacity:1;
+
+        transform:translateY(-4px);
+
+    }
+
+    100%{
+
+        opacity:.2;
+
+        transform:translateY(0);
+
+    }
+
+}
