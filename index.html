@@ -11,13 +11,14 @@
     <title>QRTalk</title>
 
     <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="Chat P2P totalmente anônimo">
+    <meta name="description" content="Chat P2P temporário para troca rápida de mensagens e arquivos">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/safety.css">
 
     <!-- Bibliotecas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -35,7 +36,7 @@
             <h1 class="logo">💬 QRTalk</h1>
 
             <p class="subtitle">
-                Chat rápido privado P2P 
+                Chat privado P2P totalmente anônimo
             </p>
 
             <div id="qrcode-container"></div>
@@ -270,6 +271,13 @@
     <script src="js/app.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/peer.js"></script>
+
+    <!-- Segurança: devem vir depois de peer.js e antes de chat.js -->
+    <script src="js/safety-config.js"></script>
+    <script src="js/admission.js"></script>
+    <script src="js/policy.js"></script>
+    <script src="js/inactivity.js"></script>
+
     <script src="js/chat.js"></script>
     <script src="js/typing.js"></script>
     <script src="js/status.js"></script>
